@@ -27,6 +27,10 @@ use [hardhat-gas-reporter](https://www.npmjs.com/package/hardhat-gas-reporter) t
 ```
 npx hardhat test
 ```
+edit .env
+
+<img width="407" alt=".env" src="https://user-images.githubusercontent.com/125814787/226537657-bcd1c3b2-82ae-4af3-87ad-28e8c56155a9.png">
+
 add `REPORT_GAS = true` into .env
 
 The result should be like this:
