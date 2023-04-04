@@ -2,11 +2,12 @@
 pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
+// This contract is almost same as SafeUpgradeable, it is meant to let proxy test if it can update implementation
+// the only difference is that the tax rate changes to 0.2%
 contract SafeUpgradeable_v2{
     address public owner;
-    bool private isInitialized=false;
+    bool public isInitialized=false;
 
-    // Set the owner once and only once.
     function initialize(address caller) public {
         require(!isInitialized, "already initialized");
         isInitialized = true;
@@ -35,8 +36,8 @@ contract SafeUpgradeable_v2{
         }
     }
 
-    function withdraw(address token, uint256 amount) public {// don't need to change
-        require(_balances[msg.sender][token] >= amount, "Insufficent balance!");// not needed in 0.8.0 cuz safemath
+    function withdraw(address token, uint256 amount) public {
+        require(_balances[msg.sender][token] >= amount, "Insufficent balance!");
         _balances[msg.sender][token] -= amount;
         ERC20(token).transfer(msg.sender, amount);
     }
