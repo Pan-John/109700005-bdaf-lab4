@@ -12,9 +12,9 @@ Use [solidity-coverage](https://www.npmjs.com/package/solidity-coverage) to chec
 ```
 npx hardhat coverage --testfiles "test/test.js" 
 ```
-The result should be like this:
+The result should be like this( I didn't test token.sol ):
 
-<img width="620" alt="截圖 2023-04-04 下午10 12 18" src="https://user-images.githubusercontent.com/125814787/229820329-b563a04f-aa65-4ea7-976c-917309971e64.png">
+<img width="620" alt="截圖 2023-04-04 下午11 19 33" src="https://user-images.githubusercontent.com/125814787/229839633-7e416f06-558f-4e4b-80b3-60109daea19e.png">
 
 The Uncovered Lines at SafeProxy.sol is `recieve() external payable { _fallback(); }`, I really don't know how to test that function.
 
