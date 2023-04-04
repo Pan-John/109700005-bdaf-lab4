@@ -1,46 +1,51 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "./Safe.sol";
+import "./SafeProxy.sol";
 
-contract SafeUpgradeable{
+contract Safefactory{
     address public owner;
-    bool public isInitialized=false;
 
-    // Set the owner once and only once.
-    function initialize(address caller) public {
-        require(!isInitialized, "already initialized");
-
-        // once it's initialize, set isInitialized = true and owner = caller
-        isInitialized = true;
-        owner = caller;
+    // Constructor function to set the owner of the contract
+    constructor(){
+        owner=msg.sender;
     }
 
-    // the rest part is like Safe contract
-    mapping(address => mapping(address => uint256)) public _balances;
-    mapping(address => uint256) public fee;
+    // save Safe contract address
+    address public safe_address; 
 
-    function takeFee(address token) public {
+    // save Proxy contract address
+    address public proxy_address;
+
+    // deploy Safe contract
+    function deploySafe()public returns(address) {
+
+        // set the owner as the deploySafe's caller
+        Safe safe = new Safe(msg.sender);
+        
+        // store the address and return it 
+        safe_address=address(safe);
+        return address(safe);
+    }    
+
+    // deploy Proxy contract
+    function deploySafeProxy()public returns(address){
+        
+        //set the owner as the deploySafe's caller, point it to current Safe contract address
+        SafeProxy safeproxy = new SafeProxy(msg.sender, safe_address);
+
+        // store the address and return it 
+        proxy_address=address(safeproxy);
+        return address(safeproxy);
+    }
+
+    // update the implementation address
+    function updateImplementation(address newImp) public{
+
+        // only owner can update
         require(msg.sender==owner,"NOT owner!");
-        ERC20(token).transfer(msg.sender, fee[token]);
-        fee[token]=0;
-    }
 
-    function deposit(address token, uint256 amount) public {
-        if(amount>=1000){
-            _balances[msg.sender][token] += (amount * 999/1000);
-            fee[token] += (amount * 1/1000);
-            ERC20(token).transferFrom(msg.sender, address(this), amount);
-        }
-        else{
-            _balances[msg.sender][token] += amount-1;
-            fee[token] += 1;
-            ERC20(token).transferFrom(msg.sender, address(this), amount);
-        }
-    }
-
-    function withdraw(address token, uint256 amount) public {
-        require(_balances[msg.sender][token] >= amount, "Insufficent balance!");
-        _balances[msg.sender][token] -= amount;
-        ERC20(token).transfer(msg.sender, amount);
+        // set safe_address as new implementation's address
+        safe_address=newImp;
     }
 }
