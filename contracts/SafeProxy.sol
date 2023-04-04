@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
+// this contract is mainly copy from https://solidity-by-example.org/app/upgradeable-proxy/
 contract SafeProxy {
     // -1 for unknown preimage
     // 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc
@@ -9,6 +10,7 @@ contract SafeProxy {
 
     address public owner;
 
+    
     constructor(address caller, address current){
         owner=caller;
         StorageSlot.getAddressSlot(OWNER_SLOT).value=caller;
@@ -81,9 +83,9 @@ contract SafeProxy {
         _fallback();
     }
 
-    //receive() external payable {
-    //    _fallback();
-    //}
+    receive() external payable {
+        _fallback();
+    }
 
 }
 
