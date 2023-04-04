@@ -27,6 +27,8 @@ use [hardhat-gas-reporter](https://www.npmjs.com/package/hardhat-gas-reporter) t
 ```
 npx hardhat test
 ```
+add `REPORT_GAS = true` into .env
+
 The result should be like this:
 
 <img width="859" alt="截圖 2023-04-04 下午7 24 24" src="https://user-images.githubusercontent.com/125814787/229777093-894ac090-9e0b-4ef4-bfbe-8b5db2b306d5.png">
