@@ -4,15 +4,18 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract SafeUpgradeable{
     address public owner;
-    bool private isInitialized=false;
+    bool public isInitialized=false;
 
     // Set the owner once and only once.
     function initialize(address caller) public {
         require(!isInitialized, "already initialized");
+
+        // once it's initialize, set isInitialized = true and owner = caller
         isInitialized = true;
         owner = caller;
     }
 
+    // the rest part is like Safe contract
     mapping(address => mapping(address => uint256)) public _balances;
     mapping(address => uint256) public fee;
 
@@ -35,8 +38,8 @@ contract SafeUpgradeable{
         }
     }
 
-    function withdraw(address token, uint256 amount) public {// don't need to change
-        require(_balances[msg.sender][token] >= amount, "Insufficent balance!");// not needed in 0.8.0 cuz safemath
+    function withdraw(address token, uint256 amount) public {
+        require(_balances[msg.sender][token] >= amount, "Insufficent balance!");
         _balances[msg.sender][token] -= amount;
         ERC20(token).transfer(msg.sender, amount);
     }
